@@ -1,104 +1,134 @@
-﻿import { NavLink, useNavigate } from 'react-router-dom'
-import '../styles/investor.css'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { useInvestments } from '../context/InvestmentContext'
-import { CircleHelp } from 'lucide-react'
+import { CircleHelp, LayoutDashboard, TrendingUp, BarChart3, Calculator, Briefcase, User, LogOut, Menu, X } from 'lucide-react'
+import { useState } from 'react'
 
-const DashboardIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-  </svg>
-)
-const FundsIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
-  </svg>
-)
-const CompareIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
-    <line x1="6" y1="20" x2="6" y2="14"/>
-  </svg>
-)
-const CalcIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/>
-    <line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/>
-  </svg>
-)
-const BriefcaseIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="2" y="7" width="20" height="14" rx="2"/>
-    <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-  </svg>
-)
-const ProfileIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-    <circle cx="12" cy="7" r="4"/>
-  </svg>
-)
-const LogoutIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-    <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-  </svg>
-)
-
-const navItems = [
-  { to: '/investor/dashboard',  label: 'Dashboard',      icon: <DashboardIcon /> },
-  { to: '/investor/funds',      label: 'Mutual Funds',   icon: <FundsIcon /> },
-  { to: '/investor/compare',    label: 'Compare Funds',  icon: <CompareIcon /> },
-  { to: '/investor/calculator', label: 'Calculator',     icon: <CalcIcon /> },
-  { to: '/investor/portfolio',  label: 'My Investments', icon: <BriefcaseIcon /> },
-  { to: '/investor/profile',    label: 'Profile',        icon: <ProfileIcon /> },
+const NAV = [
+  { to: '/investor/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+  { to: '/investor/funds', label: 'Mutual Funds', icon: <TrendingUp className="w-5 h-5" /> },
+  { to: '/investor/compare', label: 'Compare Funds', icon: <BarChart3 className="w-5 h-5" /> },
+  { to: '/investor/calculator', label: 'Calculator', icon: <Calculator className="w-5 h-5" /> },
+  { to: '/investor/investments', label: 'My Investments', icon: <Briefcase className="w-5 h-5" /> },
+  { to: '/investor/profile', label: 'Profile', icon: <User className="w-5 h-5" /> },
 ]
 
-export default function InvestorLayout({ children }) {
+const InvestorLayout = ({ children }) => {
   const navigate = useNavigate()
   const { currentUser, logout } = useInvestments()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   return (
-    <div className="inv-shell">
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="inv-sidebar">
-        <div className="inv-sidebar-brand">
-          <span className="inv-brand-name">FundsPilot</span>
-          <span className="inv-brand-sub">Investor Portal</span>
+      <motion.aside
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl border-r border-gray-200 transform lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        initial={{ x: -250 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">FP</span>
+            </div>
+            <span className="text-xl font-bold text-gray-900">FundsPilot</span>
+          </div>
+          <button
+            className="lg:hidden text-gray-500 hover:text-gray-700"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X className="w-6 h-6" />
+          </button>
         </div>
 
         {currentUser && (
-          <div style={{ padding: '0.6rem 1.2rem 0.4rem', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '0.4rem' }}>
-            <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', marginBottom: '2px' }}>Logged in as</div>
-            <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.fullName}</div>
-            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.email}</div>
+          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <div className="text-xs text-gray-500 mb-1">Welcome back</div>
+            <div className="font-semibold text-gray-900 text-sm truncate">{currentUser.fullName}</div>
+            <div className="text-xs text-gray-500 truncate">{currentUser.email}</div>
           </div>
         )}
 
-        <nav className="inv-nav">
-          {navItems.map(item => (
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          {NAV.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
-              className={({ isActive }) => 'inv-nav-item' + (isActive ? ' active' : '')}
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`
+              }
+              onClick={() => setSidebarOpen(false)}
             >
-              <span className="inv-nav-icon">{item.icon}</span>
-              {item.label}
+              {item.icon}
+              <span className="font-medium">{item.label}</span>
             </NavLink>
           ))}
         </nav>
 
-        <button className="inv-logout" onClick={() => { logout(); navigate('/') }}>
-          <span className="inv-nav-icon"><LogoutIcon /></span>
-          Logout
-        </button>
-      </aside>
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-3 w-full px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-700 rounded-lg transition-all duration-200"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
+      </motion.aside>
 
-      {/* Main */}
-      <main className="inv-main">
-        {children}
-      </main>
+      {/* Main content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top bar */}
+        <header className="bg-white shadow-sm border-b border-gray-200 lg:hidden">
+          <div className="flex items-center justify-between h-16 px-4">
+            <button
+              className="text-gray-500 hover:text-gray-700"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-900">Investor Dashboard</h1>
+            <div className="w-6" />
+          </div>
+        </header>
 
-      <button className="help-btn" title="Help"><CircleHelp style={{ width: '16px', height: '16px' }} /></button>
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+          {children}
+        </main>
+      </div>
+
+      {/* Floating help button */}
+      <motion.button
+        className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-50"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        title="Help"
+      >
+        <CircleHelp className="w-6 h-6" />
+      </motion.button>
     </div>
   )
 }
+
+export default InvestorLayout

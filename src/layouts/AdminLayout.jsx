@@ -1,86 +1,133 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import '../styles/admin.css'
+import { motion } from 'framer-motion'
 import { useInvestments } from '../context/InvestmentContext'
-import { CircleHelp } from 'lucide-react'
-
-const DashboardIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
-    <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-  </svg>
-)
-const UsersIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-    <circle cx="9" cy="7" r="4"/>
-    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-  </svg>
-)
-const FundIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-  </svg>
-)
-const ContentIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-    <polyline points="14 2 14 8 20 8"/>
-    <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
-  </svg>
-)
-const ReportIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
-    <line x1="6" y1="20" x2="6" y2="14"/>
-  </svg>
-)
-const LogoutIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-    <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-  </svg>
-)
+import { CircleHelp, LayoutDashboard, Users, FolderOpen, FileText, BarChart3, LogOut, Menu, X } from 'lucide-react'
+import { useState } from 'react'
 
 const NAV = [
-  { to: '/admin/dashboard',        label: 'Dashboard',          icon: <DashboardIcon /> },
-  { to: '/admin/users',            label: 'User Management',    icon: <UsersIcon /> },
-  { to: '/admin/funds',            label: 'Fund Management',    icon: <FundIcon /> },
-  { to: '/admin/content',          label: 'Content Management', icon: <ContentIcon /> },
-  { to: '/admin/reports',          label: 'Reports',            icon: <ReportIcon /> },
+  { to: '/admin/dashboard', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
+  { to: '/admin/users', label: 'User Management', icon: <Users className="w-5 h-5" /> },
+  { to: '/admin/funds', label: 'Fund Management', icon: <FolderOpen className="w-5 h-5" /> },
+  { to: '/admin/content', label: 'Content Management', icon: <FileText className="w-5 h-5" /> },
+  { to: '/admin/reports', label: 'Reports', icon: <BarChart3 className="w-5 h-5" /> },
 ]
 
-export default function AdminLayout({ children }) {
+const AdminLayout = ({ children }) => {
   const navigate = useNavigate()
   const { currentUser, logout } = useInvestments()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
+
   return (
-    <div className="adm-shell">
-      <aside className="adm-sidebar">
-        <div className="adm-sidebar-brand">
-          <span className="adm-brand-name">FundsPilot</span>
-          <span className="adm-brand-sub">Admin Portal</span>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Mobile sidebar overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <motion.aside
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl border-r border-gray-200 transform lg:translate-x-0 lg:static lg:inset-0 transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        initial={{ x: -250 }}
+        animate={{ x: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">FP</span>
+            </div>
+            <span className="text-xl font-bold text-gray-900">FundsPilot</span>
+          </div>
+          <button
+            className="lg:hidden text-gray-500 hover:text-gray-700"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <X className="w-6 h-6" />
+          </button>
         </div>
+
         {currentUser && (
-          <div style={{ padding: '0.6rem 1.2rem 0.4rem', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '0.4rem' }}>
-            <div style={{ fontSize: '0.82rem', color: 'rgba(255,255,255,0.55)', marginBottom: '2px' }}>Logged in as</div>
-            <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.fullName}</div>
-            <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{currentUser.email}</div>
+          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
+            <div className="text-xs text-gray-500 mb-1">Logged in as</div>
+            <div className="font-semibold text-gray-900 text-sm truncate">{currentUser.fullName}</div>
+            <div className="text-xs text-gray-500 truncate">{currentUser.email}</div>
           </div>
         )}
-        <nav className="adm-nav">
-          {NAV.map(n => (
-            <NavLink key={n.to} to={n.to}
-              className={({ isActive }) => 'adm-nav-item' + (isActive ? ' active' : '')}>
-              <span className="adm-nav-icon">{n.icon}</span>{n.label}
+
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          {NAV.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }`
+              }
+              onClick={() => setSidebarOpen(false)}
+            >
+              {item.icon}
+              <span className="font-medium">{item.label}</span>
             </NavLink>
           ))}
         </nav>
-        <button className="adm-logout" onClick={() => { logout(); navigate('/') }}>
-          <span className="adm-nav-icon"><LogoutIcon /></span>Logout
-        </button>
-      </aside>
-      <main className="adm-main">{children}</main>
-      <button className="adm-help-btn" title="Help"><CircleHelp style={{ width: '16px', height: '16px' }} /></button>
+
+        <div className="p-4 border-t border-gray-200">
+          <button
+            onClick={handleLogout}
+            className="flex items-center space-x-3 w-full px-4 py-3 text-gray-600 hover:bg-red-50 hover:text-red-700 rounded-lg transition-all duration-200"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
+      </motion.aside>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top bar */}
+        <header className="bg-white shadow-sm border-b border-gray-200 lg:hidden">
+          <div className="flex items-center justify-between h-16 px-4">
+            <button
+              className="text-gray-500 hover:text-gray-700"
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+            <h1 className="text-lg font-semibold text-gray-900">Admin Panel</h1>
+            <div className="w-6" />
+          </div>
+        </header>
+
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+          {children}
+        </main>
+      </div>
+
+      {/* Floating help button */}
+      <motion.button
+        className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center z-50"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        title="Help"
+      >
+        <CircleHelp className="w-6 h-6" />
+      </motion.button>
     </div>
   )
 }
+
+export default AdminLayout
