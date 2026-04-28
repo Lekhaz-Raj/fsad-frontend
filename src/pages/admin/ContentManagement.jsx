@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import AdminLayout from '../../layouts/AdminLayout'
 import { BookText, PlusCircle, X, PenLine, Trash2, CircleX, Save } from 'lucide-react'
 
 const SEED_ARTICLES = [
@@ -72,7 +71,8 @@ export default function ContentManagement() {
   const removeCard = id => { setCards(prev => prev.filter(c => c.id !== id)); showToast('✓ Card removed.') }
 
   return (
-    <AdminLayout>
+    <>
+     <div className="w-full max-w-7xl mx-auto">
       <div className="adm-page-header">
         <h2 className="adm-page-title" style={{ margin: 0 }}><span className="ui-title-row"><BookText className="ui-title-icon" />Content Management</span></h2>
         <button className="adm-btn-primary" onClick={() => { setEditArt(null); setShowAdd(true) }}><span className="ui-btn-content"><PlusCircle className="ui-btn-icon" />Add New Content</span></button>
@@ -190,6 +190,7 @@ export default function ContentManagement() {
           ))}
         </div>
       </div>
-    </AdminLayout>
+    </div>
+    </>
   )
 }

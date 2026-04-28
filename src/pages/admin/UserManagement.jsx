@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import AdminLayout from '../../layouts/AdminLayout'
+
 import { Users, UserPlus, X, Ban, ShieldCheck, Eye, CircleX } from 'lucide-react'
 
 const ROLES    = ['All Roles', 'Investor', 'Financial Advisor', 'Data Analyst', 'Admin']
@@ -78,7 +78,8 @@ export default function UserManagement() {
   }
 
   return (
-    <AdminLayout>
+    <>
+    <div className="w-full max-w-7xl mx-auto">
       <div className="adm-page-header">
         <h2 className="adm-page-title" style={{ margin: 0 }}><span className="ui-title-row"><Users className="ui-title-icon" />User Management</span></h2>
         <button className="adm-btn-primary" onClick={() => setShowAdd(true)}><span className="ui-btn-content"><UserPlus className="ui-btn-icon" />Add New User</span></button>
@@ -203,6 +204,7 @@ export default function UserManagement() {
           </tbody>
         </table>
       </div>
-    </AdminLayout>
+      </div>
+    </>
   )
 }

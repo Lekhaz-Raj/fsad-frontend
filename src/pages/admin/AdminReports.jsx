@@ -1,4 +1,3 @@
-import AdminLayout from '../../layouts/AdminLayout'
 import { FileChartColumn, Download } from 'lucide-react'
 import {
   BarChart, Bar,
@@ -62,7 +61,8 @@ export default function AdminReports() {
   ].filter(d => d.count > 0)
 
   return (
-    <AdminLayout>
+    <>
+    <div className="w-full max-w-7xl mx-auto">
       <div className="adm-page-header">
         <h2 className="adm-page-title" style={{ margin: 0 }}><span className="ui-title-row"><FileChartColumn className="ui-title-icon" />Reports</span></h2>
         <button className="adm-btn-primary"
@@ -140,7 +140,7 @@ export default function AdminReports() {
           </table>
         )}
       </div>
-
-    </AdminLayout>
+      </div>
+    </>
   )
 }

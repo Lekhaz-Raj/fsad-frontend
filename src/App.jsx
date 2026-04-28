@@ -2,6 +2,8 @@
 import { motion } from 'framer-motion'
 import { LogIn, UserPlus, Rocket, CircleHelp, ArrowRight, Users, BarChart3, TrendingUp, Shield, Menu, X } from 'lucide-react'
 import { InvestmentProvider } from './context/InvestmentContext.jsx'
+import './styles/investor.css'
+import AdminLayout from "./layouts/AdminLayout"
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Dashboard       from './pages/investor/Dashboard.jsx'
@@ -324,14 +326,16 @@ function App() {
         <Route path="/investor/funds/:fundName" element={<FundDetail />} />
         <Route path="/investor/compare"    element={<CompareFunds />} />
         <Route path="/investor/calculator" element={<Calculator />} />
-        <Route path="/investor/portfolio"  element={<MyInvestments />} />
+        <Route path="/investor/investments" element={<MyInvestments />} />
         <Route path="/investor/profile"    element={<Profile />} />
         {/* Admin */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/users"     element={<UserManagement />} />
-        <Route path="/admin/funds"     element={<FundManagement />} />
-        <Route path="/admin/content"   element={<ContentManagement />} />
-        <Route path="/admin/reports"   element={<AdminReports />} />
+<Route path="/admin" element={<AdminLayout />}>
+  <Route path="dashboard" element={<AdminDashboard />} />
+  <Route path="users" element={<UserManagement />} />
+  <Route path="funds" element={<FundManagement />} />
+  <Route path="content" element={<ContentManagement />} />
+  <Route path="reports" element={<AdminReports />} />
+</Route>
       </Routes>
     </InvestmentProvider>
   )

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import AdminLayout from '../../layouts/AdminLayout'
+
 import { BadgeIndianRupee, PlusCircle, X, CircleX, Save, Edit3, RefreshCcw } from 'lucide-react'
 
 const SEED_FUNDS = [
@@ -68,7 +68,9 @@ export default function FundManagement() {
   }
 
   return (
-    <AdminLayout>
+    <>
+    <div className="w-full max-w-7xl mx-auto">
+
       <div className="adm-page-header">
         <h2 className="adm-page-title" style={{ margin: 0 }}><span className="ui-title-row"><BadgeIndianRupee className="ui-title-icon" />Fund Management</span></h2>
         <button className="adm-btn-primary" onClick={() => { setEditFund(null); setForm(EMPTY_FUND); setShowAdd(true) }}><span className="ui-btn-content"><PlusCircle className="ui-btn-icon" />Add New Fund</span></button>
@@ -205,6 +207,7 @@ export default function FundManagement() {
           </tbody>
         </table>
       </div>
-    </AdminLayout>
+    </div>
+    </>
   )
 }
