@@ -1,4 +1,4 @@
-import { ShieldCheck } from "lucide-react"
+import { ShieldCheck, Users, BarChart3, TrendingUp } from "lucide-react"
 
 const TYPE_COLOR = {
   user: { bg: "#fef2f2", color: "#c0392b", border: "#fcc" },
@@ -33,22 +33,22 @@ export default function AdminDashboard() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
-        <div className="bg-white shadow rounded-xl p-6">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 hover:shadow-md transition">
           <p className="text-gray-500 text-sm">Total Users</p>
           <p className="text-2xl font-bold">{users.length}</p>
         </div>
 
-        <div className="bg-white shadow rounded-xl p-6">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 hover:shadow-md transition">
           <p className="text-gray-500 text-sm">Total Mutual Funds</p>
           <p className="text-2xl font-bold">8</p>
         </div>
 
-        <div className="bg-white shadow rounded-xl p-6">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 hover:shadow-md transition">
           <p className="text-gray-500 text-sm">Active Investors</p>
           <p className="text-2xl font-bold">{investors.length}</p>
         </div>
 
-        <div className="bg-white shadow rounded-xl p-6">
+        <div className="bg-white border border-gray-200 shadow-sm rounded-xl p-6 hover:shadow-md transition">
           <p className="text-gray-500 text-sm">Advisors Registered</p>
           <p className="text-2xl font-bold">{advisors.length}</p>
         </div>
@@ -56,19 +56,18 @@ export default function AdminDashboard() {
       </div>
 
       {/* Activity Log */}
-      <div className="adm-card">
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
 
-        <h3 className="adm-card-title">Recent Activity Log</h3>
+        <h3 className="text-lg font-semibold mb-4">Recent Activity Log</h3>
 
         {activity.length === 0 ? (
           <p style={{ color: "#888", padding: "1.5rem", textAlign: "center" }}>
             No registered users yet.
           </p>
         ) : (
-          <table className="adm-table">
-
-            <thead>
-              <tr>
+          <table className="w-full text-sm">
+            <thead className="text-left text-gray-500 border-b">
+              <tr className="border-b hover:bg-gray-50">
                 <th>Time</th>
                 <th>User</th>
                 <th>Action</th>
